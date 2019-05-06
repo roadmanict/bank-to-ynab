@@ -5,12 +5,16 @@ from datetime import datetime
 accounts = {
     'personal': 'NL61TRIO0379584190',
     'savings': 'NL32TRIO2017913936',
+    'gezamelijk': 'NL23TRIO0379565668',
+    'gezamelijk_savings': 'NL08TRIO2017900303',
 }
 
 
 def convert(file):
     personal_list = list()
-    shared_list = list()
+    savings_list = list()
+    gezamelijk_list = list()
+    gezamelijk_savings_list = list()
 
     with open(file, encoding='iso-8859-1') as csvfile:
         reader = csv.reader(csvfile, delimiter=',')
@@ -27,8 +31,12 @@ def convert(file):
 
             if row[1] == accounts['personal']:
                 personal_list.append(ynab_row)
-            elif row[1] == accounts['shared']:
-                shared_list.append(ynab_row)
+            elif row[1] == accounts['savings']:
+                savings_list.append(ynab_row)
+            elif row[1] == accounts['gezamelijk']:
+                gezamelijk_list.append(ynab_row)
+            elif row[1] == accounts['gezamelijk_savings']:
+                gezamelijk_savings_list.append(ynab_row)
 
     with open('triodos_personal.csv', 'w') as csvfile:
         writer = csv.writer(csvfile, delimiter=',')
@@ -39,11 +47,23 @@ def convert(file):
         # for row in ynab_values:
         #     writer.writerow([row[0], row[1], row[2], row[3], row[4]])
 
-    with open('triodos_shared.csv', 'w') as csvfile:
+    with open('triodos_savings.csv', 'w') as csvfile:
         writer = csv.writer(csvfile, delimiter=',')
         writer.writerow(['Date', 'Payee', 'Memo', 'Outflow', 'Inflow'])
 
-        writer.writerows(shared_list)
+        writer.writerows(savings_list)
+
+    with open('gezamelijk.csv', 'w') as csvfile:
+        writer = csv.writer(csvfile, delimiter=',')
+        writer.writerow(['Date', 'Payee', 'Memo', 'Outflow', 'Inflow'])
+
+        writer.writerows(gezamelijk_list)
+
+    with open('gezamelijk_savings.csv', 'w') as csvfile:
+        writer = csv.writer(csvfile, delimiter=',')
+        writer.writerow(['Date', 'Payee', 'Memo', 'Outflow', 'Inflow'])
+
+        writer.writerows(gezamelijk_savings_list)
 
         # for row in ynab_values:
         #     writer.writerow([row[0], row[1], row[2], row[3], row[4]])
