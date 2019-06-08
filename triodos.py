@@ -19,15 +19,25 @@ def convert(file):
     with open(file, encoding='iso-8859-1') as csvfile:
         reader = csv.reader(csvfile, delimiter=',')
         for row in reader:
-            amount = float(row[2].replace('.', '').replace(',', '.'))
+            amountValue = row[2]
+            isDebet = row[3] == "Debet"
+            dateValue = row[0]
+            description = row[7]
+            payee = row[4]
+
+            if not payee:
+                payee = description
+                description = ""
+            
+            amount = float(amountValue.replace('.', '').replace(',', '.'))
             outflow = ''
             inflow = ''
-            if row[3] == "Debet":
+            if isDebet:
                 outflow = str(amount)
             else:
                 inflow = str(amount)
 
-            ynab_row = (convert_date(row[0]), row[7], row[4], outflow, inflow)
+            ynab_row = (convert_date(dateValue), payee, description, outflow, inflow)
 
             if row[1] == accounts['personal']:
                 personal_list.append(ynab_row)
